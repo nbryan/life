@@ -1,3 +1,7 @@
+body {
+    background: #f9f07d;
+}
+
 #board table {
     border-collapse: collapse;
 }

@@ -1,12 +1,11 @@
-function Life(board) {
+function Life(rows, cols, board) {
+    this.rows = rows;
+    this.cols = cols;
+    
     if (board) {
-        this.rows = board.length;
-        this.cols = board[0].length;
-        this.board = Life.cleanBoard(board);
+        this.board = Life.cleanBoard(rows, cols, board);
     } else {
-        this.rows = 5;
-        this.cols = 5;
-        this.board = Life.createEmptyBoard(this.rows, this.cols);
+        this.board = Life.createEmptyBoard(rows, cols);
     }
 }
 
@@ -31,7 +30,7 @@ Life.prototype.tick = function() {
     }
     
     this.board = successor;
-    return this.toString();
+    return this;
 }
 
 Life.prototype.neighbors = function(row, col) {
@@ -77,16 +76,18 @@ Life.createEmptyBoard = function(rows, cols) {
     return board;
 }
 
-Life.cleanBoard = function(board) {
-    var rows = board.length;
-    var cols = board[0].length;
-    
+Life.cleanBoard = function(rows, cols, board) {
     clean = Life.createEmptyBoard(rows, cols);
+    
+    board.length = rows;
     for (var r = 0; r < rows; r++) {
+        if (!board[r]) {
+            board[r] = new Array();
+        }
+        board[r].length = cols;
         for (var c = 0; c < cols; c++) {
             clean[r][c] = board[r][c] ? true : false;
         }
     }
-    
     return clean;
 }
