@@ -1,0 +1,17 @@
+#board table {
+    border-collapse: collapse;
+}
+
+#board table td {
+    height: 10px;
+    width: 10px;
+    border: 1px solid #ccc;
+}
+
+#board table td.alive {
+    background: black;
+}
+
+#board table td.dead {
+    background: white;
+}

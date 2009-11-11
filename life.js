@@ -1,14 +1,20 @@
-function Life(rows, cols) {
-    this.board = Life.createEmptyBoard(rows, cols)
+function Life(board) {
+    if (board) {
+        this.rows = board.length;
+        this.cols = board[0].length;
+        this.board = Life.cleanBoard(board);
+    } else {
+        this.rows = 5;
+        this.cols = 5;
+        this.board = Life.createEmptyBoard(this.rows, this.cols);
+    }
 }
 
 Life.prototype.tick = function() {
-    var rows = this.board.length;
-    var cols = this.board[0].length
+    var successor = Life.createEmptyBoard(this.rows, this.cols);
     
-    var successor = Life.createEmptyBoard(rows, cols);
-    for (var r = 0; r < rows; r++) {
-        for (var c = 0; c < cols; c++) {
+    for (var r = 0; r < this.rows; r++) {
+        for (var c = 0; c < this.cols; c++) {
             var neighbors = this.neighbors(r, c);
             if (this.board[r][c]) {
                 if (neighbors < 2 || neighbors > 3) {
@@ -23,6 +29,7 @@ Life.prototype.tick = function() {
             }
         }
     }
+    
     this.board = successor;
     return this.toString();
 }
@@ -44,21 +51,13 @@ Life.prototype.neighbors = function(row, col) {
     return neighbors;
 }
 
-Life.prototype.cell = function(row, col) {
-    return this.board[row][col];
-}
-
-Life.prototype.setCell = function(row, col, alive) {
-    this.board[row][col] = alive;
-} 
-
 Life.prototype.toString = function() {
     var s = "";
-    for (var r = 0; r < this.board.length; r++) {
+    for (var r = 0; r < this.rows; r++) {
         s += "["
-        for (var c = 0; c < this.board[r].length; c++) {
+        for (var c = 0; c < this.cols; c++) {
             s += " " + (this.board[r][c] ? String.fromCharCode(8226) : " ") + " ";
-            if (c < this.board[r].length - 1) {
+            if (c < this.cols - 1) {
                 s += "|"
             }
         }
@@ -76,4 +75,18 @@ Life.createEmptyBoard = function(rows, cols) {
         }
     }
     return board;
+}
+
+Life.cleanBoard = function(board) {
+    var rows = board.length;
+    var cols = board[0].length;
+    
+    clean = Life.createEmptyBoard(rows, cols);
+    for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < cols; c++) {
+            clean[r][c] = board[r][c] ? true : false;
+        }
+    }
+    
+    return clean;
 }

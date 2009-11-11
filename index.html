@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="stylesheet.css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="life.js"></script>
+    <script type="text/javascript" src="boards.js"></script>
+    <script type="text/javascript">
+      //<![CDATA[
+      
+      $(document).ready(function() {
+        //var life = new Life(Life.createEmptyBoard(40, 60));
+        var life = new Life(Life.boards.GOSPER_GLIDER_GUN);
+        var interval;
+        
+        initBoard(life);
+        updateBoard(life);
+        
+        $("#next-gen").click(function() {
+          nextGeneration(life);
+        });
+        
+        $("#run").click(function() {
+          $(this).hide();
+          $("#pause").show();
+          interval = setInterval(function() { nextGeneration(life); }, 500);
+        });
+        
+        $("#pause").click(function() {
+          $(this).hide();
+          $("#run").show();
+          clearInterval(interval);
+        });
+        
+        $("#board table tr").each(function(row) {
+          $("td", this).each(function(col) {
+            $(this).click(function() {
+              life.board[row][col] = !life.board[row][col];
+              updateCell(this, life.board[row][col]);
+            });
+          });
+        });
+      });
+      
+      function nextGeneration(life) {
+        life.tick();
+        updateBoard(life);
+      }
+      
+      function initBoard(life) {
+        var html = "<table>";
+        for (var row = 0; row < life.rows; row++) {
+          html += "<tr>";
+          for (var col = 0; col < life.cols; col++) {
+            html += "<td></td>";
+          }
+          html += "</tr>"
+        }
+        html += "</table>"
+        $("#board").html(html);
+      }
+      
+      function updateBoard(life) {
+        $("#board table tr").each(function(row) {
+          $("td", this).each(function(col) {
+            updateCell(this, life.board[row][col]);
+          });
+        });
+      }
+      
+      function updateCell(cell, alive) {
+        $(cell).attr("class", alive ? "alive" : "dead")
+      }
+      
+      //]]>
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <div id="board">
+      </div>
+      <div id="controls">
+        <input type="button" id="next-gen" value="Next Generation" />
+        <input type="button" id="run" value="Run" />
+        <input type="button" id="pause" value="Pause" style="display:none;">
+      </div>
+    </div>
+  </body>
+</html>
