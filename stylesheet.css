@@ -13,9 +13,17 @@ body {
 }
 
 #board table td.alive {
-    background: black;
+    background: #000;
+}
+
+#board table td.alive:hover {
+    background: #530000;
 }
 
 #board table td.dead {
     background: white;
+}
+
+#board table td.dead:hover {
+    background: #f9f07d;
 }

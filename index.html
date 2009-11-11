@@ -23,7 +23,7 @@
         $("#run").click(function() {
           $(this).hide();
           $("#pause").show();
-          interval = setInterval(function() { nextGeneration(life); }, 500);
+          interval = setInterval(function() { nextGeneration(life); }, 250);
         });
         
         $("#pause").click(function() {
@@ -77,6 +77,7 @@
   </head>
   <body>
     <div id="wrapper">
+      <h1>The Game of Life</h1>
       <div id="board">
       </div>
       <div id="controls">
