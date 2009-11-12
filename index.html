@@ -8,28 +8,54 @@
     <script type="text/javascript">
       //<![CDATA[
       
+      var ROWS = 40;
+      var COLS = 60;
+      
+      var controller = (function() {
+        this.life = new Life(ROWS, COLS);
+        this.running = false;
+        
+        this.start = function() {
+          
+        },
+        
+        this.stop = function() {
+          
+        }
+        
+        this.reset = function(rows, cols, board) {
+          if (board) {
+            this.life = new Life(rows, cols, eval(board));
+          else {
+            this.life = new Life(rows, cols);
+          }
+        }
+        
+      })();
+      
       $(document).ready(function() {
-        //var life = new Life(Life.createEmptyBoard(40, 60));
-        var life = new Life(40, 60, Life.boards.GOSPER_GLIDER_GUN);
+        var life = new Life(40, 60);
+        //var life = new Life(40, 60, Life.patterns.gosperGliderGun);
         var interval;
         
         initBoard(life);
+        initPatterns();
         updateBoard(life);
         
-        $("#next-gen").click(function() {
-          nextGeneration(life);
+        $("#start").click(function() {
+          $(this).hide();
+          $("#stop").show();
+          interval = setInterval(function() { nextGeneration(life); }, 400);
         });
         
-        $("#run").click(function() {
+        $("#stop").click(function() {
           $(this).hide();
-          $("#pause").show();
-          interval = setInterval(function() { nextGeneration(life); }, 250);
-        });
-        
-        $("#pause").click(function() {
-          $(this).hide();
-          $("#run").show();
+          $("#start").show();
           clearInterval(interval);
+        });
+        
+        $("#reset").click(function() {
+          
         });
         
         $("#board table tr").each(function(row) {
@@ -48,16 +74,28 @@
       }
       
       function initBoard(life) {
-        var html = "<table>";
+        var board = "<table>";
         for (var row = 0; row < life.rows; row++) {
-          html += "<tr>";
+          board += "<tr>";
           for (var col = 0; col < life.cols; col++) {
-            html += "<td></td>";
+            board += "<td></td>";
           }
-          html += "</tr>"
+          board += "</tr>"
         }
-        html += "</table>"
-        $("#board").html(html);
+        board += "</table>"
+        $("#board").html(board);
+      }
+      
+      function initPatterns() {
+        var options = "<option value=\"\">Empty</option>";
+        for (group in Life.patternGroups) {
+          options += "<optgroup label=\"" + group + "\">";
+          for (pattern in Life.patternGroups[group]) {
+            options += "<option value=\"" + Life.patternGroups[group][pattern] + "\">" + pattern + "</option>";
+          }
+          options += "</optgroup>";
+        }
+        $("#pattern").html(options)
       }
       
       function updateBoard(life) {
@@ -77,13 +115,19 @@
   </head>
   <body>
     <div id="wrapper">
-      <h1>The Game of Life</h1>
-      <div id="board">
-      </div>
+      <h1>The [JavaScript] Game of Life</h1>
+      <div id="board"></div>
       <div id="controls">
-        <input type="button" id="next-gen" value="Next Generation" />
-        <input type="button" id="run" value="Run" />
-        <input type="button" id="pause" value="Pause" style="display:none;">
+        <div id="start-stop-controls">
+          <input id="start" class="button" type="button" value="Start" />
+          <input id="stop" class="button" type="button" value="Stop" style="display:none;" />
+        </div>
+        <div id="reset-controls">
+          <label>Initial Pattern:
+            <select id="pattern"></select>
+          </label>
+          <input id="reset" class="button" type="button" value="Reset Game" />
+        </div>
       </div>
     </div>
   </body>
