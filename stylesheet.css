@@ -16,6 +16,11 @@ input.button {
     margin: 12px 0;
 }
 
+#board {
+    height: 521px;
+    width: 782px;
+}
+
 #board table {
     border-collapse: collapse;
 }
